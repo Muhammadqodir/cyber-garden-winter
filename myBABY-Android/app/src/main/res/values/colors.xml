@@ -3,4 +3,5 @@
     <color name="colorPrimary">#3FACEB</color>
     <color name="colorPrimary_1">#7AC2E6</color>
     <color name="white">#fff</color>
+    <color name="colorTextWhiteAlpha">#ccffffff</color>
 </resources>

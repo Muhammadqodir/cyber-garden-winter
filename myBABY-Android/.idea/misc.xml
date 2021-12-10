@@ -6,14 +6,17 @@
         <entry key="app/src/main/res/drawable/background.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/btn_circle.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/btn_primary.xml" value="0.1685185185185185" />
+        <entry key="app/src/main/res/drawable/btn_transparent.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/btn_white.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/btn_white_transparent.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/ic_circle.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/ic_circle_outline.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/ic_eat.xml" value="0.1685185185185185" />
+        <entry key="app/src/main/res/drawable/ic_icon_edited.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/ic_icons8_buy_upgrade_2.xml" value="0.1685185185185185" />
         <entry key="app/src/main/res/drawable/ic_icons8_settings.xml" value="0.1685185185185185" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.12777777777777777" />
+        <entry key="app/src/main/res/drawable/icon_color.xml" value="0.1685185185185185" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.165" />
       </map>
     </option>
   </component>

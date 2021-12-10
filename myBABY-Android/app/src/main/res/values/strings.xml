@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">myBABY</string>
+    <string-array name="sub_titles">
+        <item>Нажмите чтобы начать</item>
+        <item>Переведите плач вашего малыша!</item>
+    </string-array>
 </resources>
