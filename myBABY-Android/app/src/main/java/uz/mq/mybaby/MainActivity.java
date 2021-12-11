@@ -19,6 +19,7 @@ import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -42,6 +43,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpCookie;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
+        database = FirebaseDatabase.getInstance();
         llResult = (LinearLayout) findViewById(R.id.llResult);
         context = this;
         tvSuggest = (TextView) findViewById(R.id.tvSuggest);
@@ -215,9 +218,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Object o) {
 
-                    (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
-                    (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
-
                     DatabaseReference myRef = database.getReference("requests");
                     DatabaseReference responses = database.getReference("responses");
 
@@ -226,20 +226,23 @@ public class MainActivity extends AppCompatActivity {
                     responses.child(key).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int accurancy = -1;
+                            int accuracy = -1;
                             int predict = -1;
 
                             for (DataSnapshot dttSnapshot2 : snapshot.getChildren()) {
                                 if (dttSnapshot2 .getKey().equals("accurancy"))
-                                    accurancy = dttSnapshot2 .getValue(Integer.class);
+                                    accuracy = dttSnapshot2 .getValue(Integer.class);
                                 if (dttSnapshot2 .getKey().equals("result"))
                                     predict = dttSnapshot2 .getValue(Integer.class);
                             }
-                            if (accurancy >= 0){
-                                ResponseModel model = new ResponseModel(accurancy, predict);
+                            if (accuracy >= 0){
+                                (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
+                                (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
+
+                                ResponseModel model = new ResponseModel(predict, accuracy);
                                 ((TextView) findViewById(R.id.tvResult)).setText(results[model.getResult()]);
                                 ((TextView) findViewById(R.id.tvAccuracy)).setText(model.getAccuracy()+"%");
-                                ((TextView) findViewById(R.id.tvSuggest)).setText(promotions[model.getResult()]);
+                                ((TextView) findViewById(R.id.tvSuggest)).setText(Html.fromHtml(promotions[model.getResult()]));
                                 ((ImageView) findViewById(R.id.ivIcon)).setImageResource(icons[model.getResult()]);
                                 llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
 //                                Toast.makeText(context, model.getResult()+"("+model.getAccuracy()+")", Toast.LENGTH_LONG).show();
