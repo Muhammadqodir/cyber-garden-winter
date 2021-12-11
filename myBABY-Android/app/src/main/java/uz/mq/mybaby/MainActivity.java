@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             "Холодно/Жарко",
             "Дискомфорт",
             "Голодный",
-            "Уставший"
+            "Хочу спать"
     };
 
     String[] promotions = {
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_icons8_temperature,
             R.drawable.ic_icons8_error,
             R.drawable.ic_hungry,
-            R.drawable.ic_tired
+            R.drawable.ic_icons8_sleep
     };
 
     private static String mFileName = null;
