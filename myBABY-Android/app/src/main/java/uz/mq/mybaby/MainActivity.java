@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     ObjectAnimator scaleDown;
     LinearLayout llResult;
     FirebaseDatabase database;
+    TextView tvSuggest;
     StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     @Override
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         llResult = (LinearLayout) findViewById(R.id.llResult);
         context = this;
+        tvSuggest = (TextView) findViewById(R.id.tvSuggest);
 //        database = FirebaseDatabase.getInstance();
         getWindow().getDecorView().post(() -> {
 
@@ -122,6 +125,15 @@ public class MainActivity extends AppCompatActivity {
             "Дискомфорт",
             "Голодный",
             "Уставший"
+    };
+
+    String[] promotions = {
+            "Большинство малышей страдают от колик и проблем с пищеварением из-за временного дефицита лактАзы. В таких случаях грамотно справиться с коликами современной маме помогает <b>Лактазар®<b>.",
+            "Большинство малышей страдают от колик и проблем с пищеварением из-за временного дефицита лактАзы. В таких случаях грамотно справиться с коликами современной маме помогает <b>Лактазар®<b>.",
+            "<b>LOLOCLO</b> – базовый гардероб-конструктор для детей на каждый день",
+            "Для мам нет ничего важнее здоровья их малышей. Поэтому так важно, чтобы детское питание соответствовало всем необходимым стандартам качества и состояло из полезных ингредиентов. В пюре <b>Gerber®</b> используются только натуральные компоненты, чтобы малыши были здоровыми, а мамы — спокойными!",
+            "Для мам нет ничего важнее здоровья их малышей. Поэтому так важно, чтобы детское питание соответствовало всем необходимым стандартам качества и состояло из полезных ингредиентов. В пюре <b>Gerber®</b> используются только натуральные компоненты, чтобы малыши были здоровыми, а мамы — спокойными!",
+            "Для мам нет ничего важнее здоровья их малышей. Поэтому так важно, чтобы детское питание соответствовало всем необходимым стандартам качества и состояло из полезных ингредиентов. В пюре <b>Gerber®</b> используются только натуральные компоненты, чтобы малыши были здоровыми, а мамы — спокойными!"
     };
 
     int[] icons = {
@@ -187,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
                         scaleDown.pause();
 //                        (findViewById(R.id.btnLoading)).setVisibility(View.VISIBLE);
 //                        (findViewById(R.id.ivBtnIcon)).setVisibility(View.GONE);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            tvSuggest.setText(Html.fromHtml(promotions[5],Html.FROM_HTML_MODE_LEGACY));
+                        } else {
+                            tvSuggest.setText(Html.fromHtml(promotions[5]));
+                        }
                         llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
 //                        uploadFile(mFile);
                     }else {

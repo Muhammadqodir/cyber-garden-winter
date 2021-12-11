@@ -187,7 +187,7 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:text="Для мам нет ничего важнее здоровья их малышей. Поэтому так важно, чтобы детское питание соответствовало всем необходимым стандартам качества и состояло из полезных ингредиентов. В пюре <b>Gerber®</b> используются только натуральные компоненты, чтобы малыши были здоровыми, а мамы — спокойными!"
+            android:text=""
             android:textSize="16dp"
             android:gravity="left"
             android:layout_marginTop="12dp"
@@ -195,7 +195,6 @@
             android:layout_marginRight="12dp"
             android:layout_marginBottom="12dp"
             android:id="@+id/tvSuggest"
-            android:textStyle="bold"
             android:textColor="#c444"
             android:layout_height="wrap_content"/>
 
