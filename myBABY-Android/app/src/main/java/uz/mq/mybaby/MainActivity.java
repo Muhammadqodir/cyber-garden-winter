@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioFormat;
@@ -41,6 +42,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private MediaRecorder mRecorder;
     ObjectAnimator scaleDown;
     LinearLayout llResult;
-//    FirebaseDatabase database;
-//    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+    FirebaseDatabase database;
+    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
     public static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).start();
 
+                (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
+                (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
                 (findViewById(R.id.tvSlogan)).animate().alpha(1).setDuration(300).start();
                 (findViewById(R.id.clHistory)).animate().alpha(1).setDuration(300).start();
                 (findViewById(R.id.btnRecode)).animate().setDuration(300).translationYBy(-diff).start();
@@ -173,9 +185,10 @@ public class MainActivity extends AppCompatActivity {
                     File mFile = new File(mFileName);
                     if (mFile != null && mFile.exists()) {
                         scaleDown.pause();
-
+//                        (findViewById(R.id.btnLoading)).setVisibility(View.VISIBLE);
+//                        (findViewById(R.id.ivBtnIcon)).setVisibility(View.GONE);
                         llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
-
+//                        uploadFile(mFile);
                     }else {
                         Toast.makeText(context, "File does not exist", Toast.LENGTH_LONG).show();
                     }
@@ -186,6 +199,39 @@ public class MainActivity extends AppCompatActivity {
             // not granted by user below method will
             // ask for runtime permission for mic and storage.
             RequestPermissions();
+        }
+    }
+
+
+    private void uploadFile(File file){
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(stream != null){
+
+            // Create a reference to "file"
+            String fileName = Utils.randomString(12)+".3gp";
+            StorageReference storageRef1 = storageRef.child(fileName);
+
+            UploadTask uploadTask = storageRef1.putStream(stream);
+            uploadTask.addOnFailureListener(exception -> {
+                Log.i("UploadAudio", "Uploaded!");
+                Toast.makeText(context, "Uploading failed", Toast.LENGTH_LONG).show();
+            }).addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+
+                    llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
+                    Toast.makeText(context, "Uploaded Successfully", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        else{
+            Toast.makeText(context, "Getting null file", Toast.LENGTH_LONG).show();
         }
     }
 
