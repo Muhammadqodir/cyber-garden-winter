@@ -3,11 +3,8 @@ package uz.mq.mybaby;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -18,36 +15,24 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.AudioFormat;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -57,8 +42,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -100,11 +83,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
             ((ImageView) findViewById(R.id.btnCloseResult)).setOnClickListener(v -> {
-                llResult.animate().scaleY(0.5f).alpha(0).setDuration(300).setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                    }
-                }).start();
+                llResult.animate().scaleY(0.5f).alpha(0).setDuration(300).start();
 
                 (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
                 (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
@@ -197,15 +176,9 @@ public class MainActivity extends AppCompatActivity {
                     File mFile = new File(mFileName);
                     if (mFile != null && mFile.exists()) {
                         scaleDown.pause();
-//                        (findViewById(R.id.btnLoading)).setVisibility(View.VISIBLE);
-//                        (findViewById(R.id.ivBtnIcon)).setVisibility(View.GONE);
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            tvSuggest.setText(Html.fromHtml(promotions[5],Html.FROM_HTML_MODE_LEGACY));
-                        } else {
-                            tvSuggest.setText(Html.fromHtml(promotions[5]));
-                        }
-                        llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
-//                        uploadFile(mFile);
+                        (findViewById(R.id.btnLoading)).setVisibility(View.VISIBLE);
+                        (findViewById(R.id.ivBtnIcon)).setVisibility(View.GONE);
+                        uploadFile(mFile);
                     }else {
                         Toast.makeText(context, "File does not exist", Toast.LENGTH_LONG).show();
                     }
@@ -242,8 +215,43 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Object o) {
 
-                    llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
-                    Toast.makeText(context, "Uploaded Successfully", Toast.LENGTH_LONG).show();
+                    (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
+                    (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
+
+                    DatabaseReference myRef = database.getReference("requests");
+                    DatabaseReference responses = database.getReference("responses");
+
+                    String key = myRef.push().getKey();
+                    myRef.child(key).setValue(new RequestModel("recognize", fileName));
+                    responses.child(key).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int accurancy = -1;
+                            int predict = -1;
+
+                            for (DataSnapshot dttSnapshot2 : snapshot.getChildren()) {
+                                if (dttSnapshot2 .getKey().equals("accurancy"))
+                                    accurancy = dttSnapshot2 .getValue(Integer.class);
+                                if (dttSnapshot2 .getKey().equals("result"))
+                                    predict = dttSnapshot2 .getValue(Integer.class);
+                            }
+                            if (accurancy >= 0){
+                                ResponseModel model = new ResponseModel(accurancy, predict);
+                                ((TextView) findViewById(R.id.tvResult)).setText(results[model.getResult()]);
+                                ((TextView) findViewById(R.id.tvAccuracy)).setText(model.getAccuracy()+"%");
+                                ((TextView) findViewById(R.id.tvSuggest)).setText(promotions[model.getResult()]);
+                                ((ImageView) findViewById(R.id.ivIcon)).setImageResource(icons[model.getResult()]);
+                                llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
+//                                Toast.makeText(context, model.getResult()+"("+model.getAccuracy()+")", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+//                    Toast.makeText(context, "Uploaded Successfully", Toast.LENGTH_LONG).show();
                 }
             });
         }
