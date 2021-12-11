@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                                 (findViewById(R.id.btnLoading)).setVisibility(View.GONE);
                                 (findViewById(R.id.ivBtnIcon)).setVisibility(View.VISIBLE);
 
-                                ResponseModel model = new ResponseModel(predict, accuracy);
+                                ResponseModel model = new ResponseModel(accuracy,predict);
                                 ((TextView) findViewById(R.id.tvResult)).setText(results[model.getResult()]);
                                 ((TextView) findViewById(R.id.tvAccuracy)).setText(model.getAccuracy()+"%");
                                 ((TextView) findViewById(R.id.tvSuggest)).setText(Html.fromHtml(promotions[model.getResult()]));
