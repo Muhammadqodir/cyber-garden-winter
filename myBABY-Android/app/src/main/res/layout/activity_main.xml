@@ -30,7 +30,7 @@
         android:clickable="true"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="6dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
         android:layout_height="42dp"/>
 
     <ImageView
@@ -106,13 +106,13 @@
         app:layout_constraintTop_toTopOf="parent"
         android:translationZ="9999dp"
         android:layout_margin="12dp"
-        android:alpha="1"
-        android:scaleX="1"
-        android:scaleY="1"
+        android:alpha="0"
+        android:scaleX="0"
+        android:scaleY="0"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/roud_rect"
-        android:layout_height="240dp">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -142,7 +142,7 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="Hungry"
+                    android:text="Голодный"
                     android:textSize="24dp"
                     android:textStyle="bold"
                     android:id="@+id/tvResult"
@@ -175,14 +175,16 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:text="Retreat with your baby to cuddle quietly, away from people and noise. Sucking on a pacifier also soothes, or you can try swaddling her in a light blanket so she feels safe and snug."
+            android:text="Место для сна должно быть удобным. Важно все: матрас, комфортный для долгого сна, приятное на ощупь постельное белье, в глаза ребенку не должен бить яркий дневной свет, а температура воздуха в комнате не должна быть выше 22–23 °С"
             android:textSize="16dp"
             android:gravity="left"
-            android:layout_margin="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginBottom="24dp"
             android:id="@+id/tvSuggest"
             android:textStyle="bold"
             android:textColor="#c444"
-            android:layout_marginTop="8dp"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
@@ -275,7 +277,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="04.12.2021 12:43"
+                    android:text="11.12.2021 12:43"
                     android:textSize="14dp"
                     android:textColor="#c444"
                     android:layout_marginRight="18dp"
@@ -326,7 +328,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="04.12.2021 12:40"
+                    android:text="11.12.2021 12:40"
                     android:textSize="14dp"
                     android:textColor="#c444"
                     android:layout_marginRight="18dp"
@@ -377,7 +379,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
                     android:layout_width="wrap_content"
-                    android:text="04.12.2021 10:32"
+                    android:text="11.12.2021 10:32"
                     android:textSize="14dp"
                     android:textColor="#c444"
                     android:layout_marginRight="18dp"
