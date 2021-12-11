@@ -86,6 +86,20 @@ public class MainActivity extends AppCompatActivity {
                 startRecording();
             });
 
+            ((ImageView) findViewById(R.id.btnCloseResult)).setOnClickListener(v -> {
+                llResult.animate().scaleY(0.5f).alpha(0).setDuration(300).setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                    }
+                }).start();
+
+                (findViewById(R.id.tvSlogan)).animate().alpha(1).setDuration(300).start();
+                (findViewById(R.id.clHistory)).animate().alpha(1).setDuration(300).start();
+                (findViewById(R.id.btnRecode)).animate().setDuration(300).translationYBy(-diff).start();
+                (findViewById(R.id.ivBtnBG)).animate().setDuration(300).translationYBy(-diff).start();
+
+            });
+
         });
     }
 
@@ -158,15 +172,10 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(()->{
                     File mFile = new File(mFileName);
                     if (mFile != null && mFile.exists()) {
-//                        uploadFile(mFile);
                         scaleDown.pause();
 
                         llResult.animate().alpha(1).scaleX(1).scaleY(1).setDuration(300).start();
 
-//                        (findViewById(R.id.tvSlogan)).animate().alpha(1).setDuration(300).start();
-//                        (findViewById(R.id.clHistory)).animate().alpha(1).setDuration(300).start();
-//                        (findViewById(R.id.btnRecode)).animate().setDuration(300).translationYBy(-diff).start();
-//                        (findViewById(R.id.ivBtnBG)).animate().setDuration(300).translationYBy(-diff).start();
                     }else {
                         Toast.makeText(context, "File does not exist", Toast.LENGTH_LONG).show();
                     }
@@ -179,77 +188,6 @@ public class MainActivity extends AppCompatActivity {
             RequestPermissions();
         }
     }
-
-//    private void uploadFile(File file){
-//        InputStream stream = null;
-//        try {
-//            stream = new FileInputStream(file);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        if(stream != null){
-//
-//            // Create a reference to "file"
-//            String fileName = Utils.randomString(12)+".3gp";
-//            StorageReference storageRef1 = storageRef.child(fileName);
-//
-//            UploadTask uploadTask = storageRef1.putStream(stream);
-//            uploadTask.addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception exception) {
-//                    Toast.makeText(context, "Uploading failed", Toast.LENGTH_LONG).show();
-//                }
-//            }).addOnSuccessListener(new OnSuccessListener() {
-//                @Override
-//                public void onSuccess(Object o) {
-//                    DatabaseReference myRef = database.getReference("requests");
-//                    DatabaseReference responses = database.getReference("responses");
-//
-//                    String key = myRef.push().getKey();
-//                    myRef.child(key).setValue(new Request("recognize", fileName));
-//                    responses.child(key).addValueEventListener(new ValueEventListener() {
-//                        @Override
-//                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                            int accurancy = -1;
-//                            int predict = -1;
-//
-//                            for (DataSnapshot dttSnapshot2 : snapshot.getChildren()) {
-//                                if (dttSnapshot2 .getKey().equals("accurancy"))
-//                                    accurancy = dttSnapshot2 .getValue(Integer.class);
-//                                if (dttSnapshot2 .getKey().equals("result"))
-//                                    predict = dttSnapshot2 .getValue(Integer.class);
-//                            }
-//                            if (accurancy >= 0){
-//                                BottomSheetDialog dialog = new BottomSheetDialog(context, R.style.SheetDialog);
-//                                final View parentView = getLayoutInflater().inflate(R.layout.result_dialog ,null);
-//                                ((ImageView)parentView.findViewById(R.id.ivIcon)).setImageResource(icons[predict]);
-//                                ((TextView) parentView.findViewById(R.id.tvResult)).setText(results[predict]);
-//                                ((TextView) parentView.findViewById(R.id.tvAccuracy)).setText(accurancy+" %");
-//                                dialog.setContentView(parentView);
-//                                dialog.show();
-//                                ResponseModel model = new ResponseModel(accurancy, predict);
-//                                Toast.makeText(context, model.getResult()+"("+model.getAccurancy()+")", Toast.LENGTH_LONG).show();
-//                                (findViewById(R.id.tvSlogan)).animate().alpha(1).setDuration(300).start();
-//                                (findViewById(R.id.clHistory)).animate().alpha(1).setDuration(300).start();
-//                                (findViewById(R.id.btnRecode)).animate().setDuration(300).translationYBy(-diff).start();
-//                                (findViewById(R.id.ivBtnBG)).animate().setDuration(300).translationYBy(-diff).start();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError error) {
-//
-//                        }
-//                    });
-//                    Toast.makeText(context, "Uploaded Successfully", Toast.LENGTH_LONG).show();
-//                }
-//            });
-//        }
-//        else{
-//            Toast.makeText(context, "Getting null file", Toast.LENGTH_LONG).show();
-//        }
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
